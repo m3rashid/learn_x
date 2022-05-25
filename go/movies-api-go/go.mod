@@ -1,4 +1,4 @@
-module github.com/m3rashid/movies-api-go
+module github.com/m3rashid/learn_x/go/movies-api-go
 
 go 1.18
 
