@@ -8,3 +8,5 @@ go run github.com/99designs/gqlgen init
 
 go run server.go
 ```
+
+[Reference](https://www.apollographql.com/blog/graphql/golang/using-graphql-with-golang/)
