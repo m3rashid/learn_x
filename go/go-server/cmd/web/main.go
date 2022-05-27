@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/m3rashid/learn_x/go/go-server/pkg/config"
-	"github.com/m3rashid/learn_x/go/go-server/pkg/render"
+	"github.com/m3rashid/learn_x/go/go-server/internals/config"
+	"github.com/m3rashid/learn_x/go/go-server/internals/render"
 )
 
 const portNumber = ":3000"
