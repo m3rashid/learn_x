@@ -4,16 +4,28 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/m3rashid/learn_x/go/go-server/pkg/config"
-	"github.com/m3rashid/learn_x/go/go-server/pkg/handlers"
 	"github.com/m3rashid/learn_x/go/go-server/pkg/render"
 )
 
-const portNumber = ":5000"
+const portNumber = ":3000"
+
+var app config.AppConfig
+
+var session *scs.SessionManager
 
 func main() {
-	var app config.AppConfig
+	app.InProduction = false
+
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = app.InProduction
+	app.Session = session
 
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
@@ -23,9 +35,15 @@ func main() {
 	app.TemplateCache = tc
 	render.NewTemplates(&app)
 
-	http.HandleFunc("/", handlers.Repo.Home)
-	http.HandleFunc("/about", handlers.Repo.About)
+	// http.HandleFunc("/", handlers.Repo.Home)
+	// http.HandleFunc("/about", handlers.Repo.About)
 
-	fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
-	_ = http.ListenAndServe(portNumber, nil)
+	fmt.Printf("Starting application on port %s\n", portNumber)
+	// _ = http.ListenAndServe(portNumber, nil)
+	serve := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+	err = serve.ListenAndServe()
+	log.Fatal(err)
 }

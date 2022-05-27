@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/m3rashid/learn_x/go/go-server/pkg/config"
@@ -25,12 +26,18 @@ func NewHandlers(r *Repository) {
 }
 
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
+	remoteIP := r.RemoteAddr
+	fmt.Println(remoteIP)
+	// set/get things to/from session does not work
+	// m.App.Session.Put(r.Context(), "remote_ip", "hello")
 	render.RenderTemplate(w, "home.page.tmpl", &models.TemplateData{})
 }
 
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	stringMap := make(map[string]string)
 	stringMap["test"] = "Hello world"
+	// remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
+	// stringMap["remote_ip"] = remoteIP
 	render.RenderTemplate(w, "about.page.tmpl", &models.TemplateData{
 		StringMap: stringMap,
 	})
