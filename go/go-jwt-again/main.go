@@ -25,12 +25,6 @@ func GenerateJwt() (string, error) {
 }
 
 func main() {
-	fmt.Println("Simple client")
-
-	tokenString, err := GenerateJwt()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(tokenString)
+	fmt.Println("Server is ready to receive requests")
+	HandleRoutes()
 }
