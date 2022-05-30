@@ -32,7 +32,8 @@ func getStock(id int64) (models.Stock, error) {
 	defer db.Close()
 	sqlSt := "SELECT * FROM stocks WHERE stockid = $1"
 	var stock models.Stock
-	err := db.QueryRow(sqlSt, id).Scan(&stock.StockID, &stock.Name, &stock.Price, &stock.Company)
+	row := db.QueryRow(sqlSt, id)
+	err := row.Scan(&stock.StockID, &stock.Name, &stock.Price, &stock.Company)
 	switch err {
 	case sql.ErrNoRows:
 		fmt.Println("No rows were returned!")
@@ -40,7 +41,7 @@ func getStock(id int64) (models.Stock, error) {
 	case nil:
 		return stock, nil
 	default:
-		log.Fatal(err)
+		log.Fatalf("Unable to get stocks: %v", err)
 	}
 
 	fmt.Printf("found stock with id %d\n", stock.StockID)
@@ -52,17 +53,19 @@ func getAllStocks() ([]models.Stock, error) {
 	defer db.Close()
 	sqlSt := "SELECT * FROM stocks"
 	var stocks []models.Stock
-	err := db.QueryRow(sqlSt).Scan(&stocks)
-	switch err {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-		return stocks, nil
-	case nil:
-		return stocks, nil
-	default:
-		log.Fatal(err)
+	rows, err := db.Query(sqlSt)
+	if err != nil {
+		log.Fatalf("Unable to execute query: %v", err)
 	}
-	fmt.Println("found stocks")
+	defer rows.Close()
+	for rows.Next() {
+		var stock models.Stock
+		err = rows.Scan(&stock.StockID, &stock.Name, &stock.Price, &stock.Company)
+		if err != nil {
+			log.Fatalf("Unable to scan row: %v", err)
+		}
+		stocks = append(stocks, stock)
+	}
 	return stocks, nil
 }
 
@@ -79,6 +82,34 @@ func insertStock(stock models.Stock) int64 {
 	return id
 }
 
-func updateStock(stock models.Stock) int64 {}
+func updateStock(stock models.Stock) int64 {
+	db := CreateConnection()
+	defer db.Close()
+	sqlSt := `UPDATE stocks SET name = $2, price = $3, company = $4 WHERE stockid = $1`
+	res, err := db.Exec(sqlSt, stock.StockID, stock.Name, stock.Price, stock.Company)
+	if err != nil {
+		log.Fatalf("Unable to execute query: %v", err)
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		log.Fatalf("Unable while checking rows affected: %v", err)
+	}
+	fmt.Printf("updated %d rows\n", rows)
+	return rows
+}
 
-func deleteStock(id int64) int64 {}
+func deleteStock(id int64) int64 {
+	db := CreateConnection()
+	defer db.Close()
+	sqlSt := `DELETE from stocks WHERE stockid = $1`
+	res, err := db.Exec(sqlSt, id)
+	if err != nil {
+		log.Fatalf("Unable to execute query: %v", err)
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		log.Fatalf("Unable while checking rows affected: %v", err)
+	}
+	fmt.Printf("updated %d rows\n", rows)
+	return rows
+}
