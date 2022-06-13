@@ -1,0 +1,1 @@
+print("this is a different script as a child process")
