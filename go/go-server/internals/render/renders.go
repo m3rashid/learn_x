@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/m3rashid/learn_x/go/go-server/internals/config"
-	"github.com/m3rashid/learn_x/go/go-server/internals/models"
+	"go-server/internals/config"
+	"go-server/internals/models"
 )
 
 var functions = template.FuncMap{}

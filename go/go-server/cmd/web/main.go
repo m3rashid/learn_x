@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"time"
 
+	"go-server/internals/config"
+	"go-server/internals/render"
+
 	"github.com/alexedwards/scs/v2"
-	"github.com/m3rashid/learn_x/go/go-server/internals/config"
-	"github.com/m3rashid/learn_x/go/go-server/internals/render"
 )
 
 const portNumber = ":3000"
@@ -42,7 +43,7 @@ func main() {
 	// _ = http.ListenAndServe(portNumber, nil)
 	serve := &http.Server{
 		Addr:    portNumber,
-		Handler: routes(&app),
+		Handler: Routes(&app),
 	}
 	err = serve.ListenAndServe()
 	log.Fatal(err)

@@ -3,13 +3,14 @@ package main
 import (
 	"net/http"
 
+	"go-server/internals/config"
+	"go-server/internals/handlers"
+
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/m3rashid/learn_x/go/go-server/internals/config"
-	"github.com/m3rashid/learn_x/go/go-server/internals/handlers"
 )
 
-func routes(app *config.AppConfig) http.Handler {
+func Routes(app *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer)
 	mux.Use(NoSurf)

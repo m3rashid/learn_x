@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/m3rashid/learn_x/go/go-server/internals/config"
-	"github.com/m3rashid/learn_x/go/go-server/internals/models"
-	"github.com/m3rashid/learn_x/go/go-server/internals/render"
+	"go-server/internals/config"
+	"go-server/internals/models"
+	"go-server/internals/render"
 )
 
 var Repo *Repository
