@@ -1,4 +1,4 @@
-module github.com/m3rashid/chit_chat
+module chit_chat
 
 go 1.18
 
